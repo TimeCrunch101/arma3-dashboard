@@ -31,7 +31,7 @@ const updateConfig = () => {
         shouldDefinePassword: form.value.shouldDefinePassword,
         userPassword: form.value.userPassword
     }).catch((error) => {
-        console.error(error)
+        console.error(error.response.data)
     })
 }
 
