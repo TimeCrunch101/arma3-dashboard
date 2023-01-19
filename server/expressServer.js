@@ -1,6 +1,7 @@
 
 if (process.env.NODE_ENV === 'production') require('dotenv').config()
 const express = require('express');
+const rateLimit = require('express-rate-limit')
 // const https = require('https');
 // const fs = require('fs');
 const port = 8080
@@ -15,13 +16,20 @@ const initGetRouter = require('./routes/getRouter')
 //   cert: cert
 // };
 
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 100,
+	standardHeaders: true,
+	legacyHeaders: false,
+})
+
 const cors = require("cors")
 
 app.use(cors({
     origin: '*',
     credentials: true
 }))
-
+app.use(limiter)
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 
