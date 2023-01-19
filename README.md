@@ -1,35 +1,25 @@
-# arma3-dashboard
+# Arma 3 Dashboard
 
-
-
-
-
-# client
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
+### Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
 ## Project Setup
-
+Install the Express server dependencies 
 ```sh
 npm install
 ```
-
-### Compile and Hot-Reload for Development
-
+Install the Vue dependencies
 ```sh
-npm run dev
+cd /client
+npm install
+cd ..
 ```
-
-### Compile and Minify for Production
-
+Run the Express API
 ```sh
-npm run build
+npm run api
+```
+Run the Vue Client
+```sh
+npm run vue
 ```
