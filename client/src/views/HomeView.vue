@@ -22,11 +22,9 @@ const stopServer = () => {
   <button @click="startServer()">Start Server</button>
   <button @click="stopServer()">Stop Server</button>
   <!-- 
-    The class of the server_status DIV will be dynamically
-    updated by the server depending on the state of the arma3server.exe
-    process.
-  -->
-  <div id="server_status" class="red"></div> 
+    This div gets it's class updated dynamically by the server.
+   -->
+  <div id="server_status"></div> 
 
   <br />
   <ModDLForm/>

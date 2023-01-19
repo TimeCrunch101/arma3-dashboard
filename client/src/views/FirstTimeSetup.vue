@@ -18,11 +18,11 @@ const submitForm = () => {
         STEAM_CMD_LOC: form.value.STEAM_CMD_LOC,
         ARMA_SERVER_LOC: form.value.ARMA_SERVER_LOC,
     }).then((res) => {
-        if (res.data.status === 200) {
+        if (res.data.message === 'success') {
             router.push('/')
         }
     }).catch((err) => {
-        console.log(err)
+        console.log(err.response.data)
     })
 }
 

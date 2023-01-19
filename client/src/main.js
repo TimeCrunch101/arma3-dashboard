@@ -10,7 +10,7 @@ import axios from 'axios'
 // } else {
 //     axios.defaults.baseURL = 'https://192.168.60.103:8443'
 // }
-axios.defaults.baseURL = 'https://localhost:8443'
+axios.defaults.baseURL = 'http://localhost:8080'
 axios.defaults.withCredentials
 
 const app = createApp(App)
