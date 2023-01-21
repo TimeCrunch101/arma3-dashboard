@@ -10,7 +10,6 @@ const getData = () => {
     mods.value = []
     axios.get('/get/mods').then((res) => {
         mods.value = res.data.mods
-        console.log(res.data.mods)
     }).catch((err) => {
         console.error(err)
     })
@@ -43,7 +42,7 @@ const selectMods = () => {
         getData()
     }, 1000);
 }
-// getData()
+getData()
 </script>
 
 <template>
@@ -62,66 +61,14 @@ const selectMods = () => {
             <tr v-if="mods.length !== 0" v-for="mod in mods">
                 <td :class="{enabled: mod.enabled}">{{ mod.modID }}</td>
                 <td :class="{enabled: mod.enabled}">{{ mod.modName }}</td>
-                <input :checked="mod.enabled" class="mod_checkbox" type="checkbox" :id="mod.modID" name="mods">
-                <label for="so">Server Only</label>
-                <select name="serverOnly" class="mod_serveronly" :modID='mod.modID'>
-                    <option value="1" :selected="mod.server_only === 1">Yes</option>
-                    <option value="0" :selected="mod.server_only === 0 || mod.server_only === null">No</option>
-                </select>
-            </tr>
-            <tr>
-                <td>1215948</td>
-                <td>CBA_A3</td>
                 <td>
-                    <input class="mod_checkbox" type="checkbox" name="mods">
+                    <input :checked="mod.enabled" class="mod_checkbox" type="checkbox" :id="mod.modID" name="mods">
                 </td>
                 <td>
                     <label for="so">Server Only</label>
-                    <select name="serverOnly" class="mod_serveronly">
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>1215948</td>
-                <td>CBA_A3</td>
-                <td>
-                    <input class="mod_checkbox" type="checkbox" name="mods">
-                </td>
-                <td>
-                    <label for="so">Server Only</label>
-                    <select name="serverOnly" class="mod_serveronly">
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>1215948</td>
-                <td>CBA_A3</td>
-                <td>
-                    <input class="mod_checkbox" type="checkbox" name="mods">
-                </td>
-                <td>
-                    <label for="so">Server Only</label>
-                    <select name="serverOnly" class="mod_serveronly">
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>1215948</td>
-                <td>CBA_A3</td>
-                <td>
-                    <input class="mod_checkbox" type="checkbox" name="mods">
-                </td>
-                <td>
-                    <label for="so">Server Only</label>
-                    <select name="serverOnly" class="mod_serveronly">
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
+                    <select name="serverOnly" class="mod_serveronly" :modID='mod.modID'>
+                        <option value="1" :selected="mod.server_only === 1">Yes</option>
+                        <option value="0" :selected="mod.server_only === 0 || mod.server_only === null">No</option>
                     </select>
                 </td>
             </tr>
