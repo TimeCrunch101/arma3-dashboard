@@ -9,7 +9,7 @@ const getMPMissionsFolder = () => {
       const db = await connect()
       db.all("SELECT * FROM server_config",[],(err, data) => {
         if (err) throw err;
-        resolve(data[0].MP_MISSIONS)
+        resolve(data[0].ARMA_SERVER_LOC+"\\mpmissions")
       })
     } catch (DB_ERR) {
       reject(DB_ERR)
