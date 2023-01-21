@@ -1,6 +1,6 @@
 if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 const axios = require('axios')
-const {pool} = require('../config/db')
+const {connect} = require('../config/db')
 
 const getName = (modID) => {
     return new Promise((resolve, reject) => {
@@ -24,27 +24,37 @@ const getName = (modID) => {
 
 const modsToDatabase = (modID, modName) => {
     return new Promise(async(resolve, reject) => {
-        pool.query('SELECT modID FROM dbo_mods WHERE modID = ?', [modID], (err, data) => {
-            if (err) throw err;
-            // console.log(data.length)
-            if (data.length === 1) return reject('Mod Already Downloaded')
-            try {
-                pool.query("INSERT INTO dbo_mods SET ?", {
-                    modID: modID,
-                    modName: modName
-                }, (err) => {
-                    if (err) throw err;
-                    resolve('Mod Saved to database')
-                })
-            } catch (error) {
-                reject('Internal Server Err')
-            }
-        })
+        try {
+            const db = await connect()
+            db.all('SELECT modID from mods WHERE modID = ?',[modID], (err, data) => {
+                try {
+                    if (err) throw new Error("Could not retrieve mod", {cause: err.message})
+                    console.log(data)
+                    console.log(modID)
+                    console.log(modName)
+                    if (data?.length === 1) return reject('Mod Already Downloaded')
+                    try {
+                        db.run("INSERT INTO mods(modID, modName, enabled, server_only) VALUES(?,?,?,?)",[modID,modName,0,0],(err) => {
+                            try {
+                                if (err) throw new Error("Could not save mod info", {cause: err.message})
+                                resolve('Mod Saved to database')
+                            } catch (error) {
+                                reject(error)
+                            }
+                        })
+                    } catch (err) {
+                        reject(err)
+                    }
+                } catch (sql_err) {
+                    reject(sql_err)
+                }
+            })
+        } catch (DB_ERR) {
+            reject(DB_ERR)
+        }
     })
 
 }
-
-
 
 module.exports = {
     getName: getName,

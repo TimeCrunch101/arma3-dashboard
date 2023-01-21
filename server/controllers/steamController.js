@@ -5,7 +5,7 @@ const {getServerConfig} = require('../utils/other')
 const downloadSteamMod = async (username, modID, modName) => {
     const serverConfig = await getServerConfig()
     return new Promise((resolve, reject) => {
-        let DownloadModFromSteam = spawn(serverConfig.STEAM_CMD_LOC+'\\steamcmd.exe', ['+login', username, serverConfig.STEAM_PASS, '+workshop_download_item', '107410', modID, '+logout', '+quit'])
+        let DownloadModFromSteam = spawn(serverConfig.STEAM_CMD_LOC+'\\steamcmd.exe', ['+login', serverConfig.STEAM_USERNAME, serverConfig.STEAM_PASS, '+workshop_download_item', '107410', modID, '+logout', '+quit'])
         DownloadModFromSteam.stdout.on('data', (output) => {
             if (output.toString().includes("Success. Downloaded item")) {
                 sendStream('mod-downloaded', ({
