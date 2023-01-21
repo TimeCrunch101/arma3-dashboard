@@ -20,13 +20,13 @@ const startArmaServer = async () => {
                             for (let i = 0; i < data.length; i++) {
                                 const mod = data[i];
                                 if (mod.enabled === 1) {
-                                    modsList += `${serverConfig.MOD_LOC}\\${mod.modID};`
+                                    modsList += `${serverConfig.STEAM_CMD_LOC}\\steamapps\\workshop\\content\\107410\\${mod.modID};`
                                 }
                             }
                         }
-                        const spawnArma3Server = spawn(`${serverConfig.ARMA_LOC}\\arma3server.exe`, [
-                            `-profiles=${serverConfig.ARMA_LOC}\\`,
-                            `-config=${serverConfig.ARMA_LOC}\\config.cfg`,
+                        const spawnArma3Server = spawn(`${serverConfig.ARMA_SERVER_LOC}\\arma3server.exe`, [
+                            `-profiles=${serverConfig.ARMA_SERVER_LOC}\\`,
+                            `-config=${serverConfig.ARMA_SERVER_LOC}\\config.cfg`,
                             `-mod=${modsList}`,
                             "-port=2302",
                             "-world=empty",

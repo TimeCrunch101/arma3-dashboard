@@ -98,32 +98,54 @@ exports.downloadMod = async (req, res) => {
     console.log('Mods Downloaded..')
 }
 
-exports.getMods = (req, res) => {
-    return new Promise( async (resolve, reject) => {
-        try {
-            pool.query('SELECT * FROM dbo_mods', (err, mods) => {
-                if (err) throw err
-                resolve(res.json({
-                    status: 200,
+exports.getMods = async (req, res) => {
+    try {
+        const db = await connect()
+        db.all('SELECT * FROM mods',[],(err, mods) => {
+            try {
+                if (err) throw new Error('Could not retrieve mods', {cause: err.message})
+                res.status(200).json({
                     mods: mods
-                }))
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
+                })
+            } catch (err) {
+                res.status(500).json({
+                    error: err.message,
+                    cause: err.cause
+                })
+            }
+        })
+    } catch (err) {
+        res.status(500).json({
+            error: err.message,
+            cause: err.cause
+        })
+    }
 }
 
-exports.selectMods = (req, res) => {
-    req.body.mods.forEach(mod => {
-        pool.query("UPDATE dbo_mods SET enabled = ?, server_only = ? WHERE modID = ?", [mod.enabled, mod.serverOnly, mod.modID], (err) => {
-            if (err) throw err;
+exports.selectMods = async (req, res) => {
+    try {
+        const db = await connect()
+        req.body.mods.forEach(mod => {
+            db.run("UPDATE mods SET enabled = ?, server_only = ? WHERE modID = ?", [mod.enabled, mod.serverOnly, mod.modID], (err) => {
+                try {
+                    if (err) throw new Error('Could not update mods table', {cause: err.message})
+                } catch (err) {
+                    res.status(400).json({
+                        error: err.message,
+                        cause: err.cause
+                    })
+                }
+            })
+        });
+        res.status(201).json({
+            message: 'Updated mod dependencies'
         })
-    });
-    res.json({
-        status: 200,
-        message: 'Mods updated'
-    })
+    } catch (err) {
+        res.status(500).json({
+            error: err.message,
+            cause: err.cause
+        })
+    }
 }
 
 exports.uploadMission = (req, res) => {

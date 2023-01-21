@@ -1,13 +1,14 @@
 if (process.env.NODE_ENV !== "production") require("dotenv").config;
 const fs = require("fs");
+const { connect } = require("../config/db");
 // const filePath = process.env.SERVER_CONFIG
 const filePath =
     "C:\\Users\\apaal\\GITHUB\\arma3-dashboard-server\\configt.cfg";
 
-const updateHostName = (hostname) => {
+const updateHostName = (hostname, path) => {
     const hostnameReplace = "hostname		= " + '"' + hostname + '"';
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (readFileError, data) => {
+        fs.readFile(path, (readFileError, data) => {
             try {
                 if (readFileError) {
                     let err = new Error("Error reading config file", {
@@ -17,7 +18,7 @@ const updateHostName = (hostname) => {
                 }
                 data = data.toString();
                 data = data.replace(/(hostname).*=.".*"/g, hostnameReplace);
-                fs.writeFile(filePath, data, (err) => {
+                fs.writeFile(path, data, (err) => {
                     try {
                         if (err === null) resolve(true);
                         let newErr = new Error("Error updating server hostname in config", {
@@ -35,11 +36,11 @@ const updateHostName = (hostname) => {
     });
 };
 
-const updatePassword = (shouldDefine, password) => {
+const updatePassword = (shouldDefine, password, path) => {
     if (shouldDefine === "1") {
         const passwordReplace = "password		= " + '"' + password + '"';
         return new Promise((resolve, reject) => {
-            fs.readFile(filePath, (readFileError, data) => {
+            fs.readFile(path, (readFileError, data) => {
                 try {
                     if (readFileError) {
                         let err = new Error("Error reading config file", {
@@ -49,7 +50,7 @@ const updatePassword = (shouldDefine, password) => {
                     }
                     data = data.toString();
                     data = data.replace(/\/?\/?password\W.=.*"/g, passwordReplace);
-                    fs.writeFile(filePath, data, (err) => {
+                    fs.writeFile(path, data, (err) => {
                         try {
                             if (err === null) resolve(true);
                             let newErr = new Error("Error updating server password", {
@@ -68,7 +69,7 @@ const updatePassword = (shouldDefine, password) => {
     } else {
         return new Promise((resolve, reject) => {
             const noPass = '//password		= "NoPassWordDefined"';
-            fs.readFile(filePath, (readError, data) => {
+            fs.readFile(path, (readError, data) => {
                 try {
                     if (readError)
                         throw new Error("Error reading config file", {
@@ -76,7 +77,7 @@ const updatePassword = (shouldDefine, password) => {
                         });
                     data = data.toString();
                     data = data.replace(/\/?\/?password\W.=.*"/g, noPass);
-                    fs.writeFile(filePath, data, (writeError) => {
+                    fs.writeFile(path, data, (writeError) => {
                         try {
                             if (writeError)
                                 throw new Error("Error writing to config", {
@@ -95,9 +96,9 @@ const updatePassword = (shouldDefine, password) => {
     }
 };
 
-const updateAdminPassword = (password) => {
+const updateAdminPassword = (password, path) => {
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (readErr, data) => {
+        fs.readFile(path, (readErr, data) => {
             try {
                 if (readErr)
                     throw new Error("Error reading config file", {
@@ -108,7 +109,7 @@ const updateAdminPassword = (password) => {
                     /(passwordAdmin).*"/g,
                     "passwordAdmin	= " + '"' + password + '"'
                 );
-                fs.writeFile(filePath, data, (writeErr) => {
+                fs.writeFile(path, data, (writeErr) => {
                     try {
                         if (writeErr)
                             throw new Error("Error updating admin password", {
@@ -126,9 +127,9 @@ const updateAdminPassword = (password) => {
     });
 };
 
-const updateMaxPlayers = (playerCount) => {
+const updateMaxPlayers = (playerCount, path) => {
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (readErr, data) => {
+        fs.readFile(path, (readErr, data) => {
             try {
                 if (readErr)
                     throw new Error("Error reading config file", {
@@ -139,7 +140,7 @@ const updateMaxPlayers = (playerCount) => {
                     /(maxPlayers).*;/g,
                     "maxPlayers		= " + playerCount + ";"
                 );
-                fs.writeFile(filePath, data, (writeErr) => {
+                fs.writeFile(path, data, (writeErr) => {
                     try {
                         if (writeErr)
                             new Error("Error updating max player count", {
@@ -157,10 +158,10 @@ const updateMaxPlayers = (playerCount) => {
     });
 };
 
-const updatePersistent = (persistance) => {
+const updatePersistent = (persistance, path) => {
     return new Promise((resolve, reject) => {
         try {
-            fs.readFile(filePath, (readErr, data) => {
+            fs.readFile(path, (readErr, data) => {
                 if (readErr)
                     throw new Error("Error reading config file", {
                         cause: readErr.message,
@@ -170,7 +171,7 @@ const updatePersistent = (persistance) => {
                     /(persisten).*=.[0-1]/g,
                     "persistent		= " + persistance
                 );
-                fs.writeFile(filePath, data, (writeErr) => {
+                fs.writeFile(path, data, (writeErr) => {
                     try {
                         if (writeErr)
                             new Error("Error updating persistent setting", {
@@ -188,15 +189,15 @@ const updatePersistent = (persistance) => {
     });
 };
 
-const updateVON = (value) => {
+const updateVON = (value, path) => {
     const disableVONreplace = `disableVoN		= ${value}`;
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (readErr, data) => {
+        fs.readFile(path, (readErr, data) => {
             try {
                 if (readErr) throw new Error("Error reading config file", {cause: readErr.message,});
                 data = data.toString();
                 data = data.replace(/(disableVoN).*=.[0|1]/g, disableVONreplace);
-                fs.writeFile(filePath, data, (writeErr) => {
+                fs.writeFile(path, data, (writeErr) => {
                     try {
                         if (writeErr) throw new Error("Error updating VON settings", {cause: writeErr.message})
                         resolve(true);
@@ -211,15 +212,15 @@ const updateVON = (value) => {
     });
 };
 
-const updateMission = (value) => {
+const updateMission = (value, path) => {
     const mapMissionReplace = "template = " + '"' + value + '"';
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (readErr, data) => {
+        fs.readFile(path, (readErr, data) => {
             try {
                 if (readErr) throw new Error("Error reading config file", {cause: readErr.message,});
                 data = data.toString();
                 data = data.replace(/template.=."(.*?)"/g, mapMissionReplace);
-                fs.writeFile(filePath, data, (writeErr) => {
+                fs.writeFile(path, data, (writeErr) => {
                     try {
                         if (writeErr) throw new Error("Error updating mission PBO name", {cause: writeErr.message})
                         resolve(true)
@@ -234,15 +235,15 @@ const updateMission = (value) => {
     });
 };
 
-const updateDifficulty = (value) => {
+const updateDifficulty = (value, path) => {
     const mapDifficultyReplace = "difficulty = " + '"' + value + '"';
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (readErr, data) => {
+        fs.readFile(path, (readErr, data) => {
             try {
                 if (readErr) throw new Error("Error reading config file", {cause: readErr.message})
                 data = data.toString();
                 data = data.replace(/difficulty.=."(.*?)"/g, mapDifficultyReplace);
-                fs.writeFile(filePath, data, (writeErr) => {
+                fs.writeFile(path, data, (writeErr) => {
                     try {
                         if (writeErr) throw new Error('Error updating difficulty setting', {cause: err.message})
                         resolve(true);
@@ -257,15 +258,15 @@ const updateDifficulty = (value) => {
     });
 };
 
-const updateBattleEye = (value) => {
+const updateBattleEye = (value, path) => {
     const battlEyeReplace = `BattlEye				= ${value}`;
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (readErr, data) => {
+        fs.readFile(path, (readErr, data) => {
             try {
                 if (readErr) throw new Error("Error reading config file", {cause: readErr.message})
                 data = data.toString();
                 data = data.replace(/(BattlEye).*=.[0-1]/g, battlEyeReplace);
-                fs.writeFile(filePath, data, (writeErr) => {
+                fs.writeFile(path, data, (writeErr) => {
                     try {
                         if (writeErr) throw new Error('Error updating battleye setting', {cause: err.message})
                         resolve(true);
@@ -280,10 +281,10 @@ const updateBattleEye = (value) => {
     });
 };
 
-const updateVerifySignatures = (value) => {
+const updateVerifySignatures = (value, path) => {
     const verifySignaturesReplace = `verifySignatures		= ${value}`;
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (readErr, data) => {
+        fs.readFile(path, (readErr, data) => {
             try {
                 if (readErr) throw new Error("Error reading config file", {cause: readErr.message})
                 data = data.toString();
@@ -291,7 +292,7 @@ const updateVerifySignatures = (value) => {
                     /(verifySignatures).*=.[0|2]/g,
                     verifySignaturesReplace
                 );
-                fs.writeFile(filePath, data, (writeErr) => {
+                fs.writeFile(path, data, (writeErr) => {
                     try {
                         if (writeErr) throw new Error('Error updating battleye setting', {cause: err.message})
                         resolve(true)
@@ -322,18 +323,27 @@ const updateConfig = (
 ) => {
     return new Promise(async (resolve, reject) => {
         try {
-            await updateHostName(hostname);
-            await updatePassword(shouldDefine, UserPass)
-            await updateAdminPassword(adminPassword);
-            await updateMaxPlayers(maxPlayers)
-            await updatePersistent(persistance)
-            await updateVON(VON)
-            await updateMission(PBOname)
-            await updateDifficulty(difficulty)
-            await updateBattleEye(battleye)
-            await updateVerifySignatures(verifySigs)
-            resolve(true);
-            console.log("Successfully updated config");
+            const db = await connect()
+            db.all('SELECT ARMA_SERVER_LOC from server_config WHERE server_id = 1',[],async(err, data) => {
+                try {
+                    if (err) throw new Error('Could not find Arma install path', {cause: err.message})
+                    const path = data[0].ARMA_SERVER_LOC+"\\config.cfg"
+                    await updateHostName(hostname, path)
+                    await updatePassword(shouldDefine, UserPass, path)
+                    await updateAdminPassword(adminPassword, path)
+                    await updateMaxPlayers(maxPlayers, path)
+                    await updatePersistent(persistance, path)
+                    await updateVON(VON, path)
+                    await updateMission(PBOname, path)
+                    await updateDifficulty(difficulty, path)
+                    await updateBattleEye(battleye, path)
+                    await updateVerifySignatures(verifySigs, path)
+                    resolve(true);
+                    console.log("Successfully updated config");
+                } catch (err) {
+                    reject(err)
+                }
+            })
         } catch (error) {
             reject(error);
         }

@@ -6,28 +6,52 @@ const configToDatabase = (configName,firstTimeConfig,hostname,adminPassword,maxP
         try {
             const db = await connect()
             let sql = `
-            UPDATE sconfig 
-            SET configName = ?,
-                firstTimeConfig = ?,
-                hostname = ?,
-                adminPassword = ?,
-                maxPlayers = ?,
-                persistance = ?,
-                VON = ?,
-                PBOname = ?,
-                difficulty = ?,
-                battleye = ?,
-                verifySigs = ?,
-                userPass_ShouldDefine = ?,
-                userPass = ?
-            WHERE
-                configID = 1
+            INSERT INTO sconfig 
+            (
+                configID,
+                configName,
+                firstTimeConfig,
+                hostname,
+                adminPassword,
+                maxPlayers,
+                persistance,
+                VON,
+                PBOname,
+                difficulty,
+                battleye,
+                verifySigs,
+                userPass_ShouldDefine,
+                userPass
+            )
+            VALUES
+            (
+                ?,?,?,?,?,?,?,?,?,?,?,?,?,?
+            )
             `
-            db.run(sql,[configName,firstTimeConfig,hostname,adminPassword,maxPlayers,persistance,VON,PBOname,difficulty,battleye,verifySigs,shouldDefinePassword,userPassword],(sqlError)=> {
+            // let sql = `
+            // UPDATE sconfig 
+            // SET configName = ?,
+            //     firstTimeConfig = ?,
+            //     hostname = ?,
+            //     adminPassword = ?,
+            //     maxPlayers = ?,
+            //     persistance = ?,
+            //     VON = ?,
+            //     PBOname = ?,
+            //     difficulty = ?,
+            //     battleye = ?,
+            //     verifySigs = ?,
+            //     userPass_ShouldDefine = ?,
+            //     userPass = ?
+            // WHERE
+            //     configID = 1
+            // `
+            db.run(sql,[1,configName,firstTimeConfig,hostname,adminPassword,maxPlayers,persistance,VON,PBOname,difficulty,battleye,verifySigs,shouldDefinePassword,userPassword],(sqlError)=> {
                 try {
                     if (sqlError) throw sqlError
                     resolve(true)
                 } catch (sqlError) {
+                    if (sqlError.message.includes('SQLITE_CONSTRAINT')) resolve(true)
                     reject(sqlError)
                 }
             })
