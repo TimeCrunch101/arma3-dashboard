@@ -42,6 +42,29 @@ const configToDatabase = (configName,firstTimeConfig,hostname,adminPassword,maxP
 
     })
 }
+
+const deleteConfig = (configID) => {
+    return new Promise(async(resolve, reject) => {
+        const db = await connect()    
+        db.run('DELETE FROM sconfig WHERE configID = ?',[configID],(err) => {
+            if (err) reject(err)
+            resolve(true)
+        })
+    })
+}
+
+const getConfig = (configName) => {
+    return new Promise(async(resolve, reject) => {
+        const db = await connect()
+        db.all("SELECT configID FROM sconfig WHERE configName = ?",[configName],(err, data) => {
+            if (err) reject(err)
+            resolve(data[0].configID)
+        })
+    })
+}
+
 module.exports = {
     configToDatabase: configToDatabase,
+    deleteConfig: deleteConfig,
+    getConfig: getConfig,
 }
