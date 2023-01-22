@@ -58,16 +58,48 @@ const deleteConfig = (configID) => {
 }
 
 /**
- * @param {String} configName Only used in Test for now.
+ * @param {Number} configID Config ID in sconfig table
  **/
 
-const getConfig = (configName) => {
+const getConfig = (configID) => {
     return new Promise(async(resolve, reject) => {
-        const db = await connect()
-        db.all("SELECT configID FROM sconfig WHERE configName = ?",[configName],(err, data) => {
-            if (err) reject(err)
-            resolve(data[0].configID)
-        })
+        try {
+            const db = await connect()
+            db.all("SELECT * FROM sconfig WHERE configID = ?",[configID],(err, data) => {
+                try {
+                    if (err) reject(err)
+                    resolve(data[0])
+                } catch (err) {
+                    reject(err)
+                }
+            })
+        } catch (err) {
+            reject(err)
+        }
+    })
+}
+/**
+ * @param {Number} configID Config ID in sconfig table
+ **/
+
+const setActive = (configID) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const db = await connect()
+            db.run("UPDATE sconfig SET active = ? WHERE configID = ?",[1, configID],(err) => {
+                try {
+                    if (err) reject(err)
+                    db.run("UPDATE sconfig SET active = 0 WHERE configID != ?",[configID],(err) => {
+                        if (err) throw err;
+                        resolve(true)
+                    })
+                } catch (err) {
+                    reject(err)
+                }
+            })
+        } catch (err) {
+            reject(err)
+        }
     })
 }
 
@@ -104,4 +136,5 @@ module.exports = {
     deleteConfig: deleteConfig,
     getConfig: getConfig,
     serverConfig: serverConfig,
+    setActive: setActive,
 }
