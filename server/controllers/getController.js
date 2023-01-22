@@ -40,6 +40,35 @@ exports.stopServer = async (req, res) => {
     }
 }
 
+exports.setActiveConfig = async(req, res) => {
+    try {
+        const {configID} = req.body
+        const config = await armaConfig.getConfig(configID)
+        await armaConfig.setActive(configID)
+        await updateConfig({
+            hostname: config.hostname,
+            adminPassword: config.adminPassword,
+            maxPlayers: config.maxPlayers,
+            persistance: config.persistance,
+            VON: config.VON,
+            PBOname: config.PBOname,
+            difficulty: config.difficulty,
+            battleye: config.battleye,
+            verifySigs: config.verifySigs,
+        }, {
+            userPassword: {
+                shouldDefine: config.shouldDefinePassword,
+                UserPass: config.userPassword
+            }
+        })
+        res.status(201)
+    } catch (err) {
+        res.status(500).json({
+            err
+        })
+    }
+}
+
 exports.updateServerConfig = async (req, res) => {
     try {
         const {
@@ -58,22 +87,6 @@ exports.updateServerConfig = async (req, res) => {
         } = req.body
         const FileName = await getMissionNameById(PBOname)
         await armaConfig.configToDatabase(configPreset,0,hostname,adminPassword,maxPlayers,persistance,VON,FileName,difficulty,battleye,verifySigs,shouldDefinePassword,userPassword)
-        await updateConfig({
-            hostname: hostname,
-            adminPassword: adminPassword,
-            maxPlayers: maxPlayers,
-            persistance: persistance,
-            VON: VON,
-            PBOname: FileName,
-            difficulty: difficulty,
-            battleye: battleye,
-            verifySigs: verifySigs,
-        }, {
-            userPassword: {
-                shouldDefine: shouldDefinePassword,
-                UserPass: userPassword
-            }
-        })
         res.json(201)
     } catch (error) {
         res.status(500).json({
