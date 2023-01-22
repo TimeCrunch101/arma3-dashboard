@@ -7,7 +7,7 @@ const getServerConfig = () => {
         db.all("SELECT * FROM server_config",[], (sqlError, data) => {
           try {
             if (sqlError) throw new Error("Error getting server config from DB", {cause: sqlError.message})
-            if (data[0] === undefined) throw new Error("No Arma3 server settings configured. Did you skip the first time setup?")
+            // if (data[0] === undefined) throw new Error("No Arma3 server settings configured. Did you skip the first time setup?")
             resolve(data[0])
           } catch (sqlError) {
             reject(sqlError)

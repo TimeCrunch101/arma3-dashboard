@@ -4,6 +4,12 @@ const express = require('express');
 const rateLimit = require('express-rate-limit')
 // const https = require('https');
 // const fs = require('fs');
+const {create} = require('./config/db')
+create().then((res) => {
+  console.info('Database Initialized')
+}).catch((err) => {
+  console.error(err)
+})
 const port = 8080
 const app = express()
 const {initWatchDog} = require('./controllers/spawnController')

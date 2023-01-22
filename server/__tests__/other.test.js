@@ -1,11 +1,18 @@
 const {getServerConfig, getAllMissions, getMissionNameById} = require('../utils/other')
+const {create} = require('../config/db')
+beforeAll(async() => {
+    await create()
+})
+
+// test('Init DB', async () => {
+//     const res = 
+//     expect(res).toEqual('DB INIT COMPLETE')
+// })
+
 
 test('Test FirstTime Config', async () => {
-    try {
-        const res = await getServerConfig()
-    } catch (error) {
-        expect(error.message).toEqual("No Arma3 server settings configured. Did you skip the first time setup?")
-    }
+    const res = await getServerConfig()
+    expect(res).toEqual(undefined)
 })
 
 test('GetAllMissions test', async() => {

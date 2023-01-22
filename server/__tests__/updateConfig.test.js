@@ -1,7 +1,10 @@
 const {updateConfig} = require('../utils/updateConfig')
 const {serverConfig} = require('../utils/armaConfig')
+const {create,connect} = require('../config/db')
+beforeAll(async() => {
+    await create()
+})
 const path = require('path')
-const {connect} = require('../config/db')
 const data = {
     STEAM_USERNAME: 'test',
     STEAM_PASS: 'test',
