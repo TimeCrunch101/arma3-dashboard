@@ -29,9 +29,6 @@ const modsToDatabase = (modID, modName) => {
             db.all('SELECT modID from mods WHERE modID = ?',[modID], (err, data) => {
                 try {
                     if (err) throw new Error("Could not retrieve mod", {cause: err.message})
-                    console.log(data)
-                    console.log(modID)
-                    console.log(modName)
                     if (data?.length === 1) return reject('Mod Already Downloaded')
                     try {
                         db.run("INSERT INTO mods(modID, modName, enabled, server_only) VALUES(?,?,?,?)",[modID,modName,0,0],(err) => {

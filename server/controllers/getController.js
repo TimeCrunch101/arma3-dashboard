@@ -88,14 +88,14 @@ exports.downloadMod = async (req, res) => {
         const mod = userMods[i].value;
         try {
             const name = await modController.getName(mod)
-            console.log(`Downloading: ${name}`)
+            console.info(`Downloading: ${name}`)
             await downloadSteamMod(process.env.STEAM_USERNAME, mod, name)
             await modController.modsToDatabase(mod, name)
         } catch (error) {
             console.error(`Got error: ${error}`) 
         }
     }
-    console.log('Mods Downloaded..')
+    console.info('Mods Downloaded..')
 }
 
 exports.getMods = async (req, res) => {

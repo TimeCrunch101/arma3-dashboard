@@ -16,9 +16,9 @@ const uploadFile = () => {
         'Content-Type': 'multipart/form-data'
         }
     }).then((res) => {
-        console.log(res)
+        console.info(res)
     }).catch((err) => {
-        console.log(err)
+        console.error(err)
     })
     file.value = null
 }

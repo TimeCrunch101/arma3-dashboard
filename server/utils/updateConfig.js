@@ -339,7 +339,7 @@ const updateConfig = (
                     await updateBattleEye(battleye, path)
                     await updateVerifySignatures(verifySigs, path)
                     resolve(true);
-                    console.log("Successfully updated config");
+                    console.info("Successfully updated config");
                 } catch (err) {
                     reject(err)
                 }
