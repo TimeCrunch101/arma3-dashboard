@@ -47,6 +47,7 @@ const initGetRouter = (app) => {
     getRouter.post("/server/settings", getController.serverSettings)
     getRouter.get("/config/presets", getController.getAllConfigPresets)
     getRouter.get("/server/missions", getController.getMissions)
+    getRouter.post("/set/active/config", getController.setActiveConfig)
 
     return app.use("/", getRouter)
 }
