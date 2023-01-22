@@ -212,31 +212,33 @@ exports.queryFirstTimeSetup = async (req, res) => {
     }
 }
 
-exports.serverSettings = async (req, res) => {
-    const {STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC,} = req.body
-    try {
-        const db = await connect()
-        db.run(`
-            INSERT INTO server_config
-            (server_id,STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC)
-            values(1,?,?,?,?)`,
-            [STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC],(err) => {
-            try {
-                if (err) throw err;
-                res.status(201).json({
-                    message: 'success'
-                })
-            } catch (error) {
-                res.status(500).json({
-                    message: error.message
-                })
-            }
-        })
-    } catch (DB_ERR) {
-        res.status(500).json({
-            message: DB_ERR.message
-        })
-    }
+exports.serverSettings = (req, res) => {
+    return new Promise(async(resolve, reject) => {
+        const {STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC,} = req.body
+        try {
+            const db = await connect()
+            db.run(`
+                INSERT INTO server_config
+                (server_id,STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC)
+                values(1,?,?,?,?)`,
+                [STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC],(err) => {
+                try {
+                    if (err) throw err;
+                    resolve(res.status(200).json({
+                        message: 'Settings Saved'
+                    }))
+                } catch (error) {
+                    reject(res.status(500).json({
+                        message: error.message
+                    }))
+                }
+            })
+        } catch (DB_ERR) {
+            reject(res.status(500).json({
+                message: DB_ERR.message
+            }))
+        }
+    })
 }
 
 exports.getAllConfigPresets = async (req, res) => {
