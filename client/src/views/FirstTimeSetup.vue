@@ -22,7 +22,7 @@ const submitForm = () => {
             router.push('/')
         }
     }).catch((err) => {
-        console.log(err.response.data)
+        console.error(err.response.data)
     })
 }
 

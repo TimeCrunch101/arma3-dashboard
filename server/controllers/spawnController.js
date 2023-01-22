@@ -32,7 +32,7 @@ const startArmaServer = async () => {
                             "-world=empty",
                         ])
                         spawnArma3Server.stdout.on('data', (output) => {
-                            console.log(output.toString())
+                            console.info(output.toString())
                         })
                         armaPID = spawnArma3Server.pid
                         resolve('Arma Started')
@@ -48,7 +48,7 @@ const startArmaServer = async () => {
             }
         })
     } else {
-        console.log("Thread already running")
+        console.warn("Thread already running")
     }
 }
 

@@ -15,7 +15,7 @@ const router = createRouter({
             router.push("/first-time-setup")
           }
         }).catch((err) => {
-          console.log(err.response.data)
+          console.error(err.response.data)
         })
       }
     },

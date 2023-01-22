@@ -14,7 +14,7 @@ const downloadSteamMod = async (username, modID, modName) => {
                     modName: modName,
                     message: `Successfully Downloaded: ${modName}`
                 }))
-                console.log(`Successfully Downloaded: ${modName}`)
+                console.info(`Successfully Downloaded: ${modName}`)
             }
             if (output.toString().includes("ERROR! Download item")) reject(`Error downloading mod from SteamCMD: ${modID}`)
         })

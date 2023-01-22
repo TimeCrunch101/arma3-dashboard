@@ -22,7 +22,7 @@ const connect = () => {
         try {
           if (err) throw new Error('Could not create a new Database', {cause: err.message})
         } catch (error) {
-          console.log(`ERROR: ${error.message} Cause: ${error.cause}`)
+          console.error(`ERROR: ${error.message} Cause: ${error.cause}`)
         }
       })
     }
@@ -72,20 +72,19 @@ const connect = () => {
               try {
                 if (err) throw err;
               } catch (error) {
-                console.log(error)
+                console.error(error)
               }
             })
           } catch (error) {
-            console.log(error)
+            console.error(error)
           }
         })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     })
   } catch (error) {
-    console.log(error.message)
-    console.log(error.cause)
+    console.error(error)
   }
 })()
 

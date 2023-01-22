@@ -3,7 +3,6 @@ import {io} from 'socket.io-client'
 const socket = io("http://localhost:8081/")
 
 socket.on('mod-downloaded', (data) => {
-    console.log(data)
     alert(data.message)
 })
 

@@ -15,15 +15,14 @@ const io = new Server(httpsServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log('connection')
+  console.info('Client Connected')
 });
 
 const sendStream = (streamname, data) => {
     io.sockets.emit(streamname, data)
 }
 
-// httpsServer.listen(8081, console.log(`Socket Server: https://localhost:${8081}/socket.io/socket.io.js`));
-httpsServer.listen(8081, console.log(`Socket Server: http://localhost:${8081}/socket.io/socket.io.js`));
+httpsServer.listen(8081, console.info(`Socket Server: http://localhost:${8081}/socket.io/socket.io.js`));
 
 module.exports = {
     sendStream: sendStream,

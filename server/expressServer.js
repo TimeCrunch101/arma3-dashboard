@@ -39,14 +39,13 @@ initGetRouter(app)
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(__dirname + '/public'))
-  console.log(`Production server running ${process.env.SERVER}:${port}`)
+  console.warn('PRODUCTION')
   app.get(/.*/, (req, res) => {
     res.sendFile(__dirname + '/public/index.html')
   })
 }
 
-// server.listen(port, console.log(`EXPRESS API: https://localhost:${port}/`))
-app.listen(port, console.log(`API: http://localhost:${port}/`))
+app.listen(port, console.info(`API: http://localhost:${port}/`))
 
 initWatchDog()
 require('./socketServer')
