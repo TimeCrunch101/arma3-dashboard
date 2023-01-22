@@ -1,11 +1,22 @@
 <script setup>
-import ConfigForm from "../components/ConfigForm.vue"
 import ModDLForm from "../components/ModDLForm.vue"
 import ModsTable from "../components/ModsTable.vue"
-import FileUpload from "../components/FileUpload.vue"
-
 import "../assets/script"
 import axios from "axios"
+import socket from "../assets/script"
+
+socket.on('server-status', (data) => {
+    const statusDiv = document.getElementById("server_status")
+    if (statusDiv) {
+      if (data.message === "Server Not Running") {
+          if (statusDiv.classList.value === 'green') statusDiv.classList.remove('green')
+          statusDiv.classList.add("red")
+      } else if (data.message === "arma3server Running..") {
+          if (statusDiv.classList.value === 'red') statusDiv.classList.remove('red')
+          statusDiv.classList.add("green")
+      }
+    }
+})
 
 const startServer = () => {
   axios.get('/start')
@@ -29,11 +40,7 @@ const stopServer = () => {
   <br />
   <ModDLForm/>
   <br />
-  <ConfigForm/>
-  <br />
   <ModsTable/>
-  <br />
-  <FileUpload/>
 </template>
 
 <style scoped>

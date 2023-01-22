@@ -23,7 +23,17 @@ const router = createRouter({
       path: '/first-time-setup',
       name: 'FirstTimeSetup',
       component: () => import('../views/FirstTimeSetup.vue')
-    }
+    },
+    {
+      path: '/server-presets',
+      name: 'Server Presets',
+      component: () => import('../views/ServerPresets.vue')
+    },
+    {
+      path: '/server-missions',
+      name: 'Server Missions',
+      component: () => import('../views/ServerMissions.vue')
+    },
   ]
 })
 

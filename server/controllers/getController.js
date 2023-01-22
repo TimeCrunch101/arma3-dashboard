@@ -148,11 +148,32 @@ exports.selectMods = async (req, res) => {
     }
 }
 
-exports.uploadMission = (req, res) => {
-    res.json({
-        status: 200,
-        message: 'File uploaded successfully'
-    })    
+exports.uploadMission = async (req, res) => {
+    if (req.file?.originalname !== undefined) {
+        try {
+            const db = await connect()
+            db.run("INSERT INTO missions(missionName, dest) VALUES(?,?)",[req.file.filename,req.file.destination],(err) => {
+                try {
+                    if (err) throw err;
+                    res.status(200).json({
+                        message: 'Successfully uploaded mission'
+                    })
+                } catch (err) {
+                    res.status(400).json({
+                        error: err.message,
+                    })
+                }
+            })
+        } catch (err) {
+            res.status(500).json({
+                error: err.message,
+            })
+        }
+    } else {
+        res.status(400).json({
+            message: 'Nothing was uploaded'
+        })
+    }
 }
 
 exports.queryFirstTimeSetup = async (req, res) => {
@@ -214,6 +235,48 @@ exports.serverSettings = async (req, res) => {
     } catch (DB_ERR) {
         res.status(500).json({
             message: DB_ERR.message
+        })
+    }
+}
+
+exports.getAllConfigPresets = async (req, res) => {
+    try {
+        const db = await connect()
+        db.all("SELECT * FROM sconfig",[],(err, data) => {
+            try {
+                if (err) throw new Error('Could not get config presets', {cause: err.message})
+                res.status(200).json({
+                    presets: data
+                })
+            } catch (err) {
+                
+            }
+        })
+    } catch (err) {
+        
+    }
+}
+
+exports.getMissions = async (req, res) => {
+    try {
+        const db = await connect()
+        db.all("SELECT * FROM missions",[],(err, data) => {
+            try {
+                if (err) throw new Error('Could not get missions', {cause: err.message})
+                res.status(200).json({
+                    missions: data
+                })
+            } catch (error) {
+                res.status(500).json({
+                    errMsg: error.message,
+                    errCause: error.cause
+                })
+            }
+        })
+    } catch (err) {
+        res.status(500).json({
+            errMsg: err.message,
+            errCause: err.cause
         })
     }
 }

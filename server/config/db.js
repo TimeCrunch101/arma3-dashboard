@@ -71,6 +71,19 @@ const connect = () => {
             `,[],(err) => {
               try {
                 if (err) throw err;
+                db.run(`
+                CREATE TABLE IF NOT EXISTS "missions" (
+                  "missionID"	INTEGER NOT NULL UNIQUE,
+                  "missionName"	TEXT NOT NULL UNIQUE,
+                  "dest"	TEXT,
+                  PRIMARY KEY("missionID" AUTOINCREMENT)
+                );`,[],(err) => {
+                  try {
+                    if (err) throw err;
+                  } catch (err) {
+                    console.error(error)
+                  }
+                })
               } catch (error) {
                 console.error(error)
               }

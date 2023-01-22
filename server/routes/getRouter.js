@@ -8,8 +8,12 @@ const getMPMissionsFolder = () => {
     try {
       const db = await connect()
       db.all("SELECT * FROM server_config",[],(err, data) => {
-        if (err) throw err;
-        resolve(data[0].ARMA_SERVER_LOC+"\\mpmissions")
+        try {
+          if (err) throw err;
+          resolve(data[0].ARMA_SERVER_LOC+"\\mpmissions")
+        } catch (error) {
+          reject(error)
+        }
       })
     } catch (DB_ERR) {
       reject(DB_ERR)
@@ -41,6 +45,8 @@ const initGetRouter = (app) => {
     getRouter.post("/update/config", getController.updateServerConfig)
     getRouter.post("/upload/mission", upload.single('file'), getController.uploadMission)
     getRouter.post("/server/settings", getController.serverSettings)
+    getRouter.get("/config/presets", getController.getAllConfigPresets)
+    getRouter.get("/server/missions", getController.getMissions)
 
     return app.use("/", getRouter)
 }
