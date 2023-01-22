@@ -30,4 +30,3 @@ jobs:
     - run: cd client; npm ci; cd ..
     - run: npm run build
     - run: npm test
-    - run: npm run api
