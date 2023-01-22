@@ -18,7 +18,7 @@ const submitForm = () => {
         STEAM_CMD_LOC: form.value.STEAM_CMD_LOC,
         ARMA_SERVER_LOC: form.value.ARMA_SERVER_LOC,
     }).then((res) => {
-        if (res.data.message === 'success') {
+        if (res.data.message === 'Settings Saved') {
             router.push('/')
         }
     }).catch((err) => {
