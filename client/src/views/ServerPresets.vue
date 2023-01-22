@@ -12,6 +12,7 @@ axios.get('/config/presets').then((res) => {
 }).catch((err) => {
     console.error(err)
 })
+
 const enableForm = () => {
     if (showForm.value === true) {
         showForm.value = false
@@ -19,6 +20,7 @@ const enableForm = () => {
         showForm.value = true
     }
 }
+
 </script>
 
 <template>
@@ -28,7 +30,7 @@ const enableForm = () => {
             <ConfigForm/>
         </div>
         <div class="container-item">
-            <table>
+            <table v-if="presets.length !== 0">
                 <thead>
                     <tr>
                         <td>Config ID</td>

@@ -16,6 +16,8 @@ const form = ref({
     userPassword: null
 })
 
+const missions = ref([])
+
 const updateConfig = () => {
     axios.post("/update/config", {
         configPreset: form.value.configPreset,
@@ -47,6 +49,12 @@ const enableUserPass = () => {
     }  
 }
 
+axios.get('/server/missions').then((res) => {
+    missions.value = res.data.missions
+}).catch((err) => {
+    console.error(err.response.data)
+})
+
 </script>
 
 <template>
@@ -75,10 +83,21 @@ const enableUserPass = () => {
                 <option value="0">Enable</option>
                 <option value="1">Disable</option>
             </select>
-    
-            <label for="PBOname">Mission File Name</label>
-            <input type="text" name="PBOname" id="PBOname" required v-model="form.PBOname">
-    
+            
+            <div v-if="missions.length !== 0">
+                <label for="PBOname">Mission File Name</label>
+                <br>
+                <!-- <input type="text" name="PBOname" id="PBOname" required v-model="form.PBOname"> -->
+                <select name="PBOname" id="PBOname" v-model="form.PBOname">
+                    <option v-for="mission in missions" :value="mission.missionID">{{ mission.missionName }}</option>
+                </select>
+            </div>
+            <div v-else>
+                <label for="PBOname">Mission File Name</label>
+                <p style="color: red;">Upload a mission First</p>
+                <!-- <input type="text" name="PBOname" id="PBOname" required v-model="form.PBOname"> -->
+            </div>
+            
             <label for="difficulty">Difficulty</label>
             <select name="difficulty" id="difficulty" required v-model="form.difficulty">
                 <option value="Recruit">Recruit</option>

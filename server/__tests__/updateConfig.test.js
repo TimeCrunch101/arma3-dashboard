@@ -1,18 +1,16 @@
 const {updateConfig} = require('../utils/updateConfig')
-const {serverSettings} = require('../controllers/getController')
+const {serverConfig} = require('../utils/armaConfig')
 const path = require('path')
 const {connect} = require('../config/db')
-const req = {
-    body: {
-        STEAM_USERNAME: 'test',
-        STEAM_PASS: 'test',
-        STEAM_CMD_LOC: '/test/test',
-        ARMA_SERVER_LOC: path.join(__dirname),
-    }
+const data = {
+    STEAM_USERNAME: 'test',
+    STEAM_PASS: 'test',
+    STEAM_CMD_LOC: '/test/test',
+    ARMA_SERVER_LOC: path.join(__dirname),
 }
 
 test('Create Server Instance', async () => {
-    const res = await serverSettings(req)
+    const res = await serverConfig(data.STEAM_USERNAME,data.STEAM_PASS,data.STEAM_CMD_LOC,data.ARMA_SERVER_LOC)
     expect(res).toEqual(true)
 })
 
