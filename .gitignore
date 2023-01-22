@@ -128,4 +128,4 @@ dist
 
 # CUSTOM
 db.sqlite3
-public/
+server/public/
