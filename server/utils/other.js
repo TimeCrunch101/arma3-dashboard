@@ -26,7 +26,6 @@ const getAllMissions = () => {
       db.all('SELECT * FROM missions',[],(err, data) => {
         try {
           if (err) throw err;
-          console.log(data)
           resolve(data)
         } catch (err) {
           reject(err)

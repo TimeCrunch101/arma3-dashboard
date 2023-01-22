@@ -8,7 +8,7 @@ const missions = ref([])
 axios.get('/server/missions').then((res) => {
     missions.value = res.data.missions
 }).catch((err) => {
-    console.log(err.response.data)
+    console.error(err.response.data)
 })
 
 </script>
