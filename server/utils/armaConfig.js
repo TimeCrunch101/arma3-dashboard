@@ -9,7 +9,7 @@ const configToDatabase = (configName,firstTimeConfig,hostname,adminPassword,maxP
             INSERT INTO sconfig 
             (
                 configName,
-                firstTimeConfig,
+                active,
                 hostname,
                 adminPassword,
                 maxPlayers,

@@ -44,7 +44,7 @@ const create = () => {
           CREATE TABLE IF NOT EXISTS "sconfig" (
             "configID"	INTEGER NOT NULL UNIQUE,
             "configName"	TEXT DEFAULT null,
-            "firstTimeConfig"	INTEGER DEFAULT null,
+            "active"	INTEGER DEFAULT null,
             "hostname"	TEXT DEFAULT null,
             "adminPassword"	TEXT DEFAULT null,
             "maxPlayers"	INTEGER DEFAULT null,
