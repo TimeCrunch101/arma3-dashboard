@@ -8,7 +8,6 @@ const configToDatabase = (configName,firstTimeConfig,hostname,adminPassword,maxP
             let sql = `
             INSERT INTO sconfig 
             (
-                configID,
                 configName,
                 firstTimeConfig,
                 hostname,
@@ -25,28 +24,10 @@ const configToDatabase = (configName,firstTimeConfig,hostname,adminPassword,maxP
             )
             VALUES
             (
-                ?,?,?,?,?,?,?,?,?,?,?,?,?,?
+                ?,?,?,?,?,?,?,?,?,?,?,?,?
             )
             `
-            // let sql = `
-            // UPDATE sconfig 
-            // SET configName = ?,
-            //     firstTimeConfig = ?,
-            //     hostname = ?,
-            //     adminPassword = ?,
-            //     maxPlayers = ?,
-            //     persistance = ?,
-            //     VON = ?,
-            //     PBOname = ?,
-            //     difficulty = ?,
-            //     battleye = ?,
-            //     verifySigs = ?,
-            //     userPass_ShouldDefine = ?,
-            //     userPass = ?
-            // WHERE
-            //     configID = 1
-            // `
-            db.run(sql,[1,configName,firstTimeConfig,hostname,adminPassword,maxPlayers,persistance,VON,PBOname,difficulty,battleye,verifySigs,shouldDefinePassword,userPassword],(sqlError)=> {
+            db.run(sql,[configName,firstTimeConfig,hostname,adminPassword,maxPlayers,persistance,VON,PBOname,difficulty,battleye,verifySigs,shouldDefinePassword,userPassword],(sqlError)=> {
                 try {
                     if (sqlError) throw sqlError
                     resolve(true)
