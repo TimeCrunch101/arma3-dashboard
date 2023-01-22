@@ -21,6 +21,16 @@ const enableForm = () => {
     }
 }
 
+const updateCurrentConfig = (configID) => {
+    axios.post("/set/active/config", {
+        configID: configID,
+    }).then((res) => {
+        console.log(res.data)
+    }).catch((err) => {
+        console.error(err.response.data)
+    })
+}
+
 </script>
 
 <template>
@@ -33,7 +43,7 @@ const enableForm = () => {
             <table v-if="presets.length !== 0">
                 <thead>
                     <tr>
-                        <td>Config ID</td>
+                        <td>Active</td>
                         <td>Config Name</td>
                         <td>Server Name</td>
                         <td>Mission Name</td>
@@ -41,7 +51,9 @@ const enableForm = () => {
                 </thead>
                 <tbody>
                     <tr v-for="preset in presets">
-                        <td>{{ preset.configID }}</td>
+                        <td>
+                            <input :checked="preset.active" @change="updateCurrentConfig(preset.configID)" type="radio" name="config" selected>
+                        </td>
                         <td>{{ preset.configName }}</td>
                         <td>{{ preset.hostname }}</td>
                         <td>{{ preset.PBOname }}</td>
@@ -50,6 +62,8 @@ const enableForm = () => {
             </table>
         </div>
     </div>
+    <!-- <label for="test">ttest</label>
+    <input type="radio" name="test" id="test" checked> -->
 </template>
 
 <style scoped>
