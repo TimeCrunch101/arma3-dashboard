@@ -1,4 +1,3 @@
-if (process.env.NODE_ENV !== 'production') require('dotenv')
 const {exec, spawn} = require("child_process")
 const { connect } = require('../config/db')
 const {sendStream} = require('../socketServer')
