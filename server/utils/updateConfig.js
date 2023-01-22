@@ -328,6 +328,7 @@ const updateConfig = (
                 try {
                     if (err) throw new Error('Could not find Arma install path', {cause: err.message})
                     const path = data[0].ARMA_SERVER_LOC+"\\config.cfg"
+                    console.log(path)
                     await updateHostName(hostname, path)
                     await updatePassword(shouldDefine, UserPass, path)
                     await updateAdminPassword(adminPassword, path)
