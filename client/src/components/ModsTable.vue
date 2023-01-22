@@ -46,7 +46,7 @@ getData()
 </script>
 
 <template>
-<form @submit.prevent="selectMods()">
+<form v-if="mods.length !== 0" @submit.prevent="selectMods()">
     <table>
         <thead>
             <tr>
@@ -54,7 +54,6 @@ getData()
                 <td>Mod Name</td>
                 <td>Include</td>
                 <td>Sever Only</td>
-                
             </tr>
         </thead>
         <tbody>
