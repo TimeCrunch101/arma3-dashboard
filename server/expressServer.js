@@ -49,3 +49,4 @@ app.listen(port, console.info(`API: http://localhost:${port}/`))
 
 initWatchDog()
 require('./socketServer')
+console.log('test')
