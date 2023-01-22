@@ -4,6 +4,7 @@ const {updateConfig} = require('../utils/updateConfig')
 const {startArmaServer, stopArmaServer} = require('../controllers/spawnController')
 const modController = require('../utils/modController')
 const armaConfig = require('../utils/armaConfig');
+const {getAllMissions, getMissionNameById} = require('../utils/other')
 const { connect } = require('../config/db');
 
 exports.startServer = async (req, res) => {
@@ -39,6 +40,35 @@ exports.stopServer = async (req, res) => {
     }
 }
 
+exports.setActiveConfig = async(req, res) => {
+    try {
+        const {configID} = req.body
+        const config = await armaConfig.getConfig(configID)
+        await armaConfig.setActive(configID)
+        await updateConfig({
+            hostname: config.hostname,
+            adminPassword: config.adminPassword,
+            maxPlayers: config.maxPlayers,
+            persistance: config.persistance,
+            VON: config.VON,
+            PBOname: config.PBOname,
+            difficulty: config.difficulty,
+            battleye: config.battleye,
+            verifySigs: config.verifySigs,
+        }, {
+            userPassword: {
+                shouldDefine: config.shouldDefinePassword,
+                UserPass: config.userPassword
+            }
+        })
+        res.status(201)
+    } catch (err) {
+        res.status(500).json({
+            err
+        })
+    }
+}
+
 exports.updateServerConfig = async (req, res) => {
     try {
         const {
@@ -55,23 +85,8 @@ exports.updateServerConfig = async (req, res) => {
             shouldDefinePassword,
             userPassword
         } = req.body
-        await armaConfig.configToDatabase(configPreset,0,hostname,adminPassword,maxPlayers,persistance,VON,PBOname,difficulty,battleye,verifySigs,shouldDefinePassword,userPassword)
-        await updateConfig({
-            hostname: hostname,
-            adminPassword: adminPassword,
-            maxPlayers: maxPlayers,
-            persistance: persistance,
-            VON: VON,
-            PBOname: PBOname,
-            difficulty: difficulty,
-            battleye: battleye,
-            verifySigs: verifySigs,
-        }, {
-            userPassword: {
-                shouldDefine: shouldDefinePassword,
-                UserPass: userPassword
-            }
-        })
+        const FileName = await getMissionNameById(PBOname)
+        await armaConfig.configToDatabase(configPreset,0,hostname,adminPassword,maxPlayers,persistance,VON,FileName,difficulty,battleye,verifySigs,shouldDefinePassword,userPassword)
         res.json(201)
     } catch (error) {
         res.status(500).json({
@@ -148,11 +163,32 @@ exports.selectMods = async (req, res) => {
     }
 }
 
-exports.uploadMission = (req, res) => {
-    res.json({
-        status: 200,
-        message: 'File uploaded successfully'
-    })    
+exports.uploadMission = async (req, res) => {
+    if (req.file?.originalname !== undefined) {
+        try {
+            const db = await connect()
+            db.run("INSERT INTO missions(missionName, dest) VALUES(?,?)",[req.file.filename,req.file.destination],(err) => {
+                try {
+                    if (err) throw err;
+                    res.status(200).json({
+                        message: 'Successfully uploaded mission'
+                    })
+                } catch (err) {
+                    res.status(400).json({
+                        error: err.message,
+                    })
+                }
+            })
+        } catch (err) {
+            res.status(500).json({
+                error: err.message,
+            })
+        }
+    } else {
+        res.status(400).json({
+            message: 'Nothing was uploaded'
+        })
+    }
 }
 
 exports.queryFirstTimeSetup = async (req, res) => {
@@ -192,28 +228,51 @@ exports.queryFirstTimeSetup = async (req, res) => {
 }
 
 exports.serverSettings = async (req, res) => {
-    const {STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC,} = req.body
+    try {
+        const {STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC} = req.body
+        await armaConfig.serverConfig(STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC)
+        res.status(201).json({
+            message: 'Settings Saved'
+        })
+    } catch (err) {
+        res.status(400).json({
+            err
+        })
+    }
+}
+
+exports.getAllConfigPresets = async (req, res) => {
     try {
         const db = await connect()
-        db.run(`
-            INSERT INTO server_config
-            (server_id,STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC)
-            values(1,?,?,?,?)`,
-            [STEAM_USERNAME,STEAM_PASS,STEAM_CMD_LOC,ARMA_SERVER_LOC],(err) => {
+        db.all("SELECT * FROM sconfig",[],(err, data) => {
             try {
-                if (err) throw err;
-                res.status(201).json({
-                    message: 'success'
+                if (err) throw new Error('Could not get config presets', {cause: err.message})
+                res.status(200).json({
+                    presets: data
                 })
-            } catch (error) {
+            } catch (err) {
                 res.status(500).json({
-                    message: error.message
+                    err
                 })
             }
         })
-    } catch (DB_ERR) {
+    } catch (err) {
         res.status(500).json({
-            message: DB_ERR.message
+            err
         })
     }
+}
+
+exports.getMissions = async (req, res) => {
+    try {
+        const missions = await getAllMissions()    
+        res.status(200).json({
+            missions
+        })
+    } catch (err) {
+        res.status(500).json({
+            err
+        })
+    }
+
 }

@@ -327,7 +327,8 @@ const updateConfig = (
             db.all('SELECT ARMA_SERVER_LOC from server_config WHERE server_id = 1',[],async(err, data) => {
                 try {
                     if (err) throw new Error('Could not find Arma install path', {cause: err.message})
-                    const path = data[0].ARMA_SERVER_LOC+"\\config.cfg"
+                    const path = data[0].ARMA_SERVER_LOC+"/config.cfg"
+                    console.log(path)
                     await updateHostName(hostname, path)
                     await updatePassword(shouldDefine, UserPass, path)
                     await updateAdminPassword(adminPassword, path)

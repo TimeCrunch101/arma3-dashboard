@@ -16,6 +16,8 @@ const form = ref({
     userPassword: null
 })
 
+const missions = ref([])
+
 const updateConfig = () => {
     axios.post("/update/config", {
         configPreset: form.value.configPreset,
@@ -47,68 +49,87 @@ const enableUserPass = () => {
     }  
 }
 
+axios.get('/server/missions').then((res) => {
+    missions.value = res.data.missions
+}).catch((err) => {
+    console.error(err.response.data)
+})
+
 </script>
 
 <template>
-    <form @submit.prevent="updateConfig()">
-        <label for="configPreset">Config Preset Name</label>
-        <input type="text" name="configPreset" id="configPreset" v-model="form.configPreset">
-
-        <label for="hostname">Server Name</label>
-        <input type="text" name="hostname" id="hostname" v-model="form.hostname">
-
-        <label for="adminPassword">Admin Password</label>
-        <input type="password" name="adminPassword" id="adminPassword" v-model="form.adminPassword">
-
-        <label for="maxPlayers">Max Players</label>
-        <input type="number" name="maxPlayers" id="maxPlayers" min="1" max="40" v-model="form.maxPlayers">
-
-        <label for="persistance">persistance</label>
-        <select name="persistance" id="persistance" v-model="form.persistance">
-            <option value="1">Enabled</option>
-            <option value="0">Disable</option>
-        </select>
-
-        <label for="VON">Voice On Net</label>
-        <select name="VON" id="VON" v-model="form.VON">
-            <option value="0">Enable</option>
-            <option value="1">Disable</option>
-        </select>
-
-        <label for="PBOname">Mission File Name</label>
-        <input type="text" name="PBOname" id="PBOname" v-model="form.PBOname">
-
-        <label for="difficulty">Difficulty</label>
-        <select name="difficulty" id="difficulty" v-model="form.difficulty">
-            <option value="Recruit">Recruit</option>
-            <option value="Regular">Regular</option>
-            <option value="Veteran">Veteran</option>
-            <option value="Custom">Custom</option>
-        </select>
-
-        <label for="battleye">Require BattlEye</label>
-        <select name="battleye" id="battleye" v-model="form.battleye">
-            <option value="1">Enabled</option>
-            <option value="0">Disable</option>
-        </select>
-
-        <label for="verifySigs">Verify Mod Signatures</label>
-        <select name="verifySigs" id="verifySigs" v-model="form.verifySigs">
-            <option value="2">Enabled</option>
-            <option value="0">Disable</option>
-        </select>
-
-        <label for="shouldDefinePassword">Enable Server Password?</label>
-        <select @change="enableUserPass()" name="shouldDefinePassword" id="shouldDefinePassword" v-model="form.shouldDefinePassword">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
-        </select>
-
-        <label for="userPassword">Server Password</label>
-        <input class="not-allowed" type="password" name="userPassword" id="userPassword" disabled v-model="form.userPassword">
-
-        <button type="submit">Update Config File</button>
-    </form>
+    <div>
+        <form @submit.prevent="updateConfig()">
+            <label for="configPreset">Config Preset Name</label>
+            <input type="text" name="configPreset" id="configPreset" required v-model="form.configPreset">
+    
+            <label for="hostname">Server Name</label>
+            <input type="text" name="hostname" id="hostname" required v-model="form.hostname">
+    
+            <label for="adminPassword">Admin Password</label>
+            <input type="password" name="adminPassword" id="adminPassword" required v-model="form.adminPassword">
+    
+            <label for="maxPlayers">Max Players</label>
+            <input type="number" name="maxPlayers" id="maxPlayers" min="1" max="40" required v-model="form.maxPlayers">
+    
+            <label for="persistance">persistance</label>
+            <select name="persistance" id="persistance" required v-model="form.persistance">
+                <option value="1">Enabled</option>
+                <option value="0">Disable</option>
+            </select>
+    
+            <label for="VON">Voice On Net</label>
+            <select name="VON" id="VON" required v-model="form.VON">
+                <option value="0">Enable</option>
+                <option value="1">Disable</option>
+            </select>
+            
+            <div v-if="missions.length !== 0">
+                <label for="PBOname">Mission File Name</label>
+                <br>
+                <!-- <input type="text" name="PBOname" id="PBOname" required v-model="form.PBOname"> -->
+                <select name="PBOname" id="PBOname" v-model="form.PBOname">
+                    <option v-for="mission in missions" :value="mission.missionID">{{ mission.missionName }}</option>
+                </select>
+            </div>
+            <div v-else>
+                <label for="PBOname">Mission File Name</label>
+                <p style="color: red;">Upload a mission First</p>
+                <!-- <input type="text" name="PBOname" id="PBOname" required v-model="form.PBOname"> -->
+            </div>
+            
+            <label for="difficulty">Difficulty</label>
+            <select name="difficulty" id="difficulty" required v-model="form.difficulty">
+                <option value="Recruit">Recruit</option>
+                <option value="Regular">Regular</option>
+                <option value="Veteran">Veteran</option>
+                <option value="Custom">Custom</option>
+            </select>
+    
+            <label for="battleye">Require BattlEye</label>
+            <select name="battleye" id="battleye" required v-model="form.battleye">
+                <option value="1">Enabled</option>
+                <option value="0">Disable</option>
+            </select>
+    
+            <label for="verifySigs">Verify Mod Signatures</label>
+            <select name="verifySigs" id="verifySigs" required v-model="form.verifySigs">
+                <option value="2">Enabled</option>
+                <option value="0">Disable</option>
+            </select>
+    
+            <label for="shouldDefinePassword">Enable Server Password?</label>
+            <select @change="enableUserPass()" name="shouldDefinePassword" id="shouldDefinePassword" required v-model="form.shouldDefinePassword">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+    
+            <label for="userPassword">Server Password</label>
+            <input class="not-allowed" type="password" name="userPassword" id="userPassword" disabled v-model="form.userPassword">
+    
+            <button type="submit">Add Config Preset</button>
+        </form>
+    </div>
 </template>
 
 <style scoped>
@@ -117,7 +138,6 @@ form {
     padding: 5px;
     display: flex;
     flex-direction: column;
-    width: 25%;
 }
 .not-allowed:hover {
     cursor: not-allowed;
