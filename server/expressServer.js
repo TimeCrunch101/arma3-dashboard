@@ -12,7 +12,7 @@ create().then((res) => {
 })
 const port = 8080
 const app = express()
-const {initWatchDog} = require('./controllers/spawnController')
+const {initArmaServiceWatcher} = require('./controllers/spawnController')
 const initGetRouter = require('./routes/getRouter')
 
 // var key = fs.readFileSync(__dirname + '/certs/selfsigned.key');
@@ -53,5 +53,5 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(port, console.info(`API: http://localhost:${port}/`))
 
-initWatchDog()
+initArmaServiceWatcher()
 require('./socketServer')
