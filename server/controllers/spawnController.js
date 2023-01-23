@@ -65,7 +65,7 @@ const stopArmaServer = () => {
         })
     })
 }
-const initWatchDog = () => {
+const initArmaServiceWatcher = () => {
     setInterval(() => {
         exec('tasklist', async (err, stdout, stderr) => {
             if (stdout.includes('arma3server.exe')) {
@@ -84,5 +84,5 @@ const initWatchDog = () => {
 module.exports = {
     startArmaServer: startArmaServer,
     stopArmaServer: stopArmaServer,
-    initWatchDog: initWatchDog,
+    initArmaServiceWatcher: initArmaServiceWatcher,
 }
