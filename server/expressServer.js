@@ -31,10 +31,13 @@ const limiter = rateLimit({
 
 const cors = require("cors")
 
-app.use(cors({
-    origin: '*',
-    credentials: true
-}))
+if (process.env.NODE_ENV !== 'production') {
+  app.use(cors({
+      origin: 'http://127.0.0.1:5173',
+      credentials: true
+  }))
+}
+
 app.use(limiter)
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())

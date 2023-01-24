@@ -5,13 +5,11 @@ import App from './App.vue'
 import router from './router'
 import "./assets/main.css"
 import axios from 'axios'
-// axios.defaults.withCredentials = true
-// if (process.env.NODE_ENV === 'development') {
-// } else {
-//     axios.defaults.baseURL = 'https://192.168.60.103:8443'
-// }
-axios.defaults.baseURL = 'http://192.168.60.103:8080'
-axios.defaults.withCredentials
+
+if (process.env.NODE_ENV !== 'production') {
+    axios.defaults.baseURL = 'http://localhost:8080'
+}
+axios.defaults.withCredentials = true
 
 const app = createApp(App)
 
