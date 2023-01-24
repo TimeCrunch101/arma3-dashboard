@@ -24,7 +24,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: pm2 stop 0; pm2 delete 0
     - run: npm ci
     - run: cd ./client; npm ci; cd ..
     - run: npm run build
     - run: npm test
+    - run: $env:NODE_ENV="production"; pm2 start ./server/expressServer.js
