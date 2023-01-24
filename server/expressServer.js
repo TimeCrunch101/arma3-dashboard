@@ -1,5 +1,5 @@
 
-if (process.env.NODE_ENV === 'production') require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 const express = require('express');
 const rateLimit = require('express-rate-limit')
 // const https = require('https');
@@ -12,7 +12,7 @@ create().then((res) => {
 })
 const port = 8080
 const app = express()
-const {initWatchDog} = require('./controllers/spawnController')
+const {initArmaServiceWatcher} = require('./controllers/spawnController')
 const initGetRouter = require('./routes/getRouter')
 
 // var key = fs.readFileSync(__dirname + '/certs/selfsigned.key');
@@ -31,10 +31,13 @@ const limiter = rateLimit({
 
 const cors = require("cors")
 
-app.use(cors({
-    origin: '*',
-    credentials: true
-}))
+if (process.env.NODE_ENV !== 'production') {
+  app.use(cors({
+      origin: 'http://127.0.0.1:5173',
+      credentials: true
+  }))
+}
+
 app.use(limiter)
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
@@ -53,5 +56,5 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(port, console.info(`API: http://localhost:${port}/`))
 
-initWatchDog()
+initArmaServiceWatcher()
 require('./socketServer')
