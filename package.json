@@ -5,7 +5,7 @@
   "main": "expressServer.js",
   "scripts": {
     "api": "nodemon server/expressServer.js",
-    "prod": "node server/expressServer.js",
+    "prod": "set NODE_ENV=production&& node server/expressServer.js",
     "vue": "cd ./client && npm run dev",
     "build": "cd ./client && npm run build",
     "test": "jest"
