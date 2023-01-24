@@ -1,4 +1,3 @@
-if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 const { downloadSteamMod } = require('./steamController')
 const {updateConfig} = require('../utils/updateConfig')
 const {startArmaServer, stopArmaServer} = require('../controllers/spawnController')
@@ -104,7 +103,7 @@ exports.downloadMod = async (req, res) => {
         try {
             const name = await modController.getName(mod)
             console.info(`Downloading: ${name}`)
-            await downloadSteamMod(process.env.STEAM_USERNAME, mod, name)
+            await downloadSteamMod(mod, name)
             await modController.modsToDatabase(mod, name)
         } catch (error) {
             console.error(`Got error: ${error}`) 

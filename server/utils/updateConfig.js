@@ -1,9 +1,5 @@
-if (process.env.NODE_ENV !== "production") require("dotenv").config;
 const fs = require("fs");
 const { connect } = require("../config/db");
-// const filePath = process.env.SERVER_CONFIG
-const filePath =
-    "C:\\Users\\apaal\\GITHUB\\arma3-dashboard-server\\configt.cfg";
 
 const updateHostName = (hostname, path) => {
     const hostnameReplace = "hostname		= " + '"' + hostname + '"';
